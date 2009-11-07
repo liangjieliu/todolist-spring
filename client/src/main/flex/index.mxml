@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application layout="absolute"
+                xmlns:mx="http://www.adobe.com/2006/mxml"
+                xmlns:todolist="org.epseelon.todolist.*"
+                width="100%"
+                height="100%"
+                preinitialize="initRemoteConnection()">
+    <mx:Script>
+        <![CDATA[
+        import flexed.widgets.alerts.alert;
+
+        import mx.messaging.ChannelSet;
+        import mx.messaging.channels.AMFChannel;
+        import mx.rpc.AsyncResponder;
+        import mx.rpc.AsyncToken;
+        import mx.rpc.events.FaultEvent;
+        import mx.rpc.events.ResultEvent;
+
+        private var _channelSet:ChannelSet;
+        public function get channelSet():ChannelSet {
+            return _channelSet;
+        }
+
+        [Bindable]
+        private var _loggedIn:Boolean = false;
+        public function get loggedIn():Boolean {
+            return _loggedIn;
+        }
+
+        private function initRemoteConnection():void {
+            var channel:AMFChannel = new AMFChannel("my-amf",
+                    "/todolist/spring/messagebroker/amf");
+            _channelSet = new ChannelSet();
+            _channelSet.addChannel(channel);
+        }
+
+        private function login():void{
+            var token:AsyncToken = _channelSet.login(loginField.text, passwordField.text);
+            token.addResponder(new AsyncResponder(loginResult, loginFault));
+        }
+
+        private function loginResult(event:ResultEvent,
+                                     token:AsyncToken):void {
+            _loggedIn = true;
+            loggedInMessage.text = "Logged in as " + event.result.name;
+        }
+
+        private function loginFault(event:FaultEvent, token:AsyncToken):void
+        {
+            alert.error("Invalid login or password");
+        }
+
+        private function logout():void{
+            var token:AsyncToken = _channelSet.logout();
+            token.addResponder(new AsyncResponder(logoutResult, logoutFault));
+        }
+
+        private function logoutResult(event:ResultEvent, token:AsyncToken):void{
+            _loggedIn = false;
+        }
+
+        private function logoutFault(event:FaultEvent, token:AsyncToken):void{
+            alert.error("Could not log out");
+        }
+
+        ]]>
+    </mx:Script>
+    <mx:Style source="/css/main.css"/>
+    <mx:HBox width="100%" height="100%">
+        <mx:VBox width="100%" height="100%">
+            <todolist:TodoListView width="50%" height="50%" visible="{_loggedIn}"/>
+        </mx:VBox>
+    </mx:HBox>
+    <mx:ApplicationControlBar dock="true">
+        <mx:Label text="Login" visible="{!_loggedIn}" includeInLayout="{!_loggedIn}"/>
+        <mx:TextInput id="loginField" visible="{!_loggedIn}" includeInLayout="{!_loggedIn}"/>
+        <mx:Label text="Password" visible="{!_loggedIn}" includeInLayout="{!_loggedIn}"/>
+        <mx:TextInput id="passwordField" visible="{!_loggedIn}" includeInLayout="{!_loggedIn}"/>
+        <mx:Button label="Login" visible="{!_loggedIn}" includeInLayout="{!_loggedIn}"
+                click="login()"/>
+        <mx:Label id="loggedInMessage" visible="{_loggedIn}" includeInLayout="{_loggedIn}"/>
+        <mx:Button label="Logout" visible="{_loggedIn}" includeInLayout="{_loggedIn}"
+                click="logout()"/>
+    </mx:ApplicationControlBar>
+</mx:Application>
