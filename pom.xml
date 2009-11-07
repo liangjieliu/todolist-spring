@@ -44,7 +44,7 @@
                 <plugin>
                     <groupId>org.sonatype.flexmojos</groupId>
                     <artifactId>flexmojos-maven-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>${flexmojos.version}</version>
                     <extensions>true</extensions>
                     <configuration>
                         <licenses>
@@ -60,10 +60,16 @@
                         <targetPlayer>10.0.0</targetPlayer>
                     </configuration>
                     <dependencies>
-                        <dependency>
+                        <!--<dependency>
                             <groupId>com.adobe.flex</groupId>
                             <artifactId>license</artifactId>
                             <version>${flex.version}</version>
+                        </dependency>-->
+                        <dependency>
+                            <groupId>com.adobe.flex</groupId>
+                            <artifactId>compiler</artifactId>
+                            <version>${flex.version}</version>
+                            <type>pom</type>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -73,15 +79,15 @@
 
     <repositories>
         <repository>
-			<id>flex-mojos-repository</id>
-			<url>http://repository.sonatype.org/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
+            <id>flex-mojos-repository</id>
+            <url>http://repository.sonatype.org/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>epseelon-repository</id>
             <url>http://m2repo.epseelon.org/</url>
@@ -116,19 +122,19 @@
             <id>spring-milestone</id>
             <name>Spring Portfolio Milestone Repository</name>
             <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
-        </repository>        
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-			<id>flex-mojos-repository</id>
-			<url>http://repository.sonatype.org/content/groups/public</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
+            <id>flex-mojos-repository</id>
+            <url>http://repository.sonatype.org/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
         <pluginRepository>
             <id>epseelon-repository</id>
             <url>http://m2repo.epseelon.org/</url>
@@ -201,7 +207,8 @@
     </profiles>
 
     <properties>
-        <flex.version>3.3.0.4852</flex.version>
+        <flex.version>3.4.0.9271</flex.version>
         <flex.license>XXXX-XXXX-XXXX-XXXX-XXXX-XXXX</flex.license>
+        <flexmojos.version>3.4.2</flexmojos.version>
     </properties>
 </project>
